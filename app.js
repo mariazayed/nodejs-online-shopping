@@ -12,8 +12,7 @@ const multer = require('multer');
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
-const MONGODB_URI =
-  'mongodb+srv://maximilian:1fTl973JsCzkgzNf@cluster0-ntrwp.mongodb.net/shop';
+const MONGODB_URI = 'mongodb://localhost:27017/shop';
 
 const app = express();
 const store = new MongoDBStore({
@@ -100,18 +99,16 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  // res.status(error.httpStatusCode).render(...);
-  // res.redirect('/500');
-  res.status(500).render('500', {
+	res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.session?.isLoggedIn
   });
 });
 
 mongoose
   .connect(MONGODB_URI)
-  .then(result => {
+  .then(() => {
     app.listen(3000);
   })
   .catch(err => {
